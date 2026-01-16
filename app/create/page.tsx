@@ -155,7 +155,7 @@ export default function CreateBounty() {
             <li>1. Your ETH is locked in the smart contract (escrow)</li>
             <li>2. A worker claims and completes your task</li>
             <li>3. You approve their work → they get paid instantly</li>
-            <li>4. If you don't respond in 2 hours → auto-refund to worker</li>
+            <li>4. If you don&apos;t respond in 2 hours → auto-refund to worker</li>
           </ol>
         </div>
       </main>

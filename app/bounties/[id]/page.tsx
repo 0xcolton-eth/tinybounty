@@ -1,21 +1,33 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { TINYBOUNTY_ADDRESS, TINYBOUNTY_ABI } from '@/config/wagmi';
 import { formatEther } from 'viem';
 import Link from 'next/link';
 
+interface Bounty {
+  id: string;
+  poster: string;
+  title: string;
+  description: string;
+  reward: string;
+  deadline: string;
+  worker: string;
+  submissionURI: string;
+  status: number;
+  createdAt: string;
+}
+
 const STATUS_LABELS = ['Open', 'Claimed', 'Submitted', 'Approved', 'Refunded', 'Disputed'];
 
 export default function BountyDetail() {
   const params = useParams();
-  const router = useRouter();
   const { address } = useAccount();
   const chainId = useChainId();
-  const [bounty, setBounty] = useState<any>(null);
+  const [bounty, setBounty] = useState<Bounty | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [submissionFile, setSubmissionFile] = useState<File | null>(null);
@@ -245,7 +257,7 @@ export default function BountyDetail() {
           <div className="bg-amber-950/50 border border-amber-900 rounded-lg p-6">
             <h3 className="text-xl font-semibold text-amber-400 mb-2">Auto-Refund Available</h3>
             <p className="text-slate-400 mb-4">
-              The poster hasn't responded for over 2 hours. You can claim a full refund.
+              The poster hasn&apos;t responded for over 2 hours. You can claim a full refund.
             </p>
             <button
               onClick={handleRefund}

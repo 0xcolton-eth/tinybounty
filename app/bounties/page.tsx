@@ -26,7 +26,7 @@ export default function BrowseBounties() {
           functionName: 'nextBountyId',
         });
 
-        const bountyPromises: Promise<any>[] = [];
+        const bountyPromises: Promise<unknown>[] = [];
         
         // Fetch all bounties (start from 1, not 0)
         for (let i = 1; i < Number(nextId); i++) {
@@ -42,20 +42,23 @@ export default function BrowseBounties() {
 
         const results = await Promise.all(bountyPromises);
 
-        const formattedBounties: Bounty[] = results.map((bounty: any) => ({
-          id: bounty.id.toString(),
-          poster: bounty.poster,
-          title: bounty.title,
-          description: bounty.description,
-          reward: bounty.reward.toString(),
-          deadline: bounty.deadline.toString(),
-          worker: bounty.worker,
-          submissionURI: bounty.submissionURI,
-          status: Number(bounty.status),
-          createdAt: bounty.createdAt.toString(),
-          claimedAt: bounty.claimedAt.toString(),
-          submittedAt: bounty.submittedAt.toString(),
-        }));
+        const formattedBounties: Bounty[] = results.map((result: unknown) => {
+          const bounty = result as { id: bigint; poster: string; title: string; description: string; reward: bigint; deadline: bigint; worker: string; submissionURI: string; status: number; createdAt: bigint; claimedAt: bigint; submittedAt: bigint };
+          return {
+            id: bounty.id.toString(),
+            poster: bounty.poster,
+            title: bounty.title,
+            description: bounty.description,
+            reward: bounty.reward.toString(),
+            deadline: bounty.deadline.toString(),
+            worker: bounty.worker,
+            submissionURI: bounty.submissionURI,
+            status: Number(bounty.status),
+            createdAt: bounty.createdAt.toString(),
+            claimedAt: bounty.claimedAt.toString(),
+            submittedAt: bounty.submittedAt.toString(),
+          };
+        });
 
         // Sort by most recent first
         formattedBounties.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));

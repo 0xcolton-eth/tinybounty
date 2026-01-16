@@ -127,7 +127,7 @@ export default function Home() {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Built on Base</h3>
                 <p className="text-slate-400">
-                  Fast, cheap transactions on Coinbase's L2 network.
+                  Fast, cheap transactions on Coinbase&apos;s L2 network.
                 </p>
               </div>
             </div>
