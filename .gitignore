@@ -1,0 +1,19 @@
+
+# Dependencies and builds
+node_modules/
+.next/
+out/
+dist/
+
+# Environment and local config
+.env*
+.venv/
+.vercel/
+
+# Editors and logs
+.vscode/
+.idea/
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
