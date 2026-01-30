@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createPublicClient, http } from 'viem';
 import { base, baseSepolia } from 'viem/chains';
-import { TINYBOUNTY_ADDRESS, TINYBOUNTY_ABI } from '@/config/wagmi';
+import { TINYBOUNTY_ADDRESS, TINYBOUNTY_ABI } from '@/config/contracts';
 
 const publicClient = createPublicClient({
   chain: process.env.NEXT_PUBLIC_NETWORK === 'mainnet' ? base : baseSepolia,
@@ -10,10 +10,11 @@ const publicClient = createPublicClient({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const bountyId = BigInt(params.id);
+    const { id } = await params;
+    const bountyId = BigInt(id);
     const chainId = process.env.NEXT_PUBLIC_NETWORK === 'mainnet' ? base.id : baseSepolia.id;
 
     const bounty = await publicClient.readContract({
@@ -24,18 +25,18 @@ export async function GET(
     });
 
     return NextResponse.json({
-      id: bounty[0].toString(),
-      poster: bounty[1],
-      title: bounty[2],
-      description: bounty[3],
-      reward: bounty[4].toString(),
-      deadline: bounty[5].toString(),
-      worker: bounty[6],
-      submissionURI: bounty[7],
-      status: Number(bounty[8]),
-      createdAt: bounty[9].toString(),
-      claimedAt: bounty[10].toString(),
-      submittedAt: bounty[11].toString(),
+      id: bounty.id.toString(),
+      poster: bounty.poster,
+      title: bounty.title,
+      description: bounty.description,
+      reward: bounty.reward.toString(),
+      deadline: bounty.deadline.toString(),
+      worker: bounty.worker,
+      submissionURI: bounty.submissionURI,
+      status: Number(bounty.status),
+      createdAt: bounty.createdAt.toString(),
+      claimedAt: bounty.claimedAt.toString(),
+      submittedAt: bounty.submittedAt.toString(),
     });
   } catch (error) {
     console.error('Error fetching bounty:', error);

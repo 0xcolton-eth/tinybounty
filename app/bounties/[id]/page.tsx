@@ -19,6 +19,8 @@ interface Bounty {
   submissionURI: string;
   status: number;
   createdAt: string;
+  claimedAt: string;
+  submittedAt: string;
 }
 
 const STATUS_LABELS = ['Open', 'Claimed', 'Submitted', 'Approved', 'Refunded', 'Disputed'];
