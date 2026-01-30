@@ -1,4 +1,4 @@
-# TinyBounty 🎯
+# TinyBounty 
 
 **Micro-task marketplace on Base. Post tasks, get work done fast, pay in crypto.**
 
@@ -6,11 +6,11 @@ Built with Next.js 14, wagmi, RainbowKit, and deployed on Vercel.
 
 ## Features
 
-- ⚡ **Instant Escrow**: Funds locked in smart contract until work is approved
-- 🛡️ **Auto-Refund**: Workers get paid if posters don't respond within 2 hours
-- 💎 **On-Chain Reputation**: Track completion rates, earnings, and reliability
-- 🚀 **Fast & Cheap**: Built on Base for low fees and quick transactions
-- 📱 **Mobile-First**: Works seamlessly with Coinbase Smart Wallet
+- **Instant Escrow**: Funds locked in smart contract until work is approved
+- **Auto-Refund**: Workers get paid if posters don't respond within 2 hours
+- **On-Chain Reputation**: Track completion rates, earnings, and reliability
+- **Fast & Cheap**: Built on Base for low fees and quick transactions
+- **Mobile-First**: Works seamlessly with Coinbase Smart Wallet
 
 ## How It Works
 
