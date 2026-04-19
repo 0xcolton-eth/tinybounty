@@ -6,7 +6,7 @@ export const TINYBOUNTY_ADDRESS = {
   [baseSepolia.id]: '0x0000000000000000000000000000000000000000' as const, // TODO: Replace after testnet deploy
 } as const;
 
-// Contract ABI - Generated from TinyBounty.sol
+// Contract ABI - Matches contracts/TinyBounty.sol exactly
 export const TINYBOUNTY_ABI = [
   // Read Functions
   {
@@ -57,24 +57,48 @@ export const TINYBOUNTY_ABI = [
   },
   {
     type: 'function',
-    name: 'getBountyCount',
+    name: 'nextBountyId',
     inputs: [],
     outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    name: 'platformFee',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'owner',
+    name: 'treasury',
     inputs: [],
     outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'totalFeesCollected',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'activeClaimCount',
+    inputs: [{ name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'canRefund',
+    inputs: [{ name: 'bountyId', type: 'uint256' }],
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'calculatePayout',
+    inputs: [{ name: 'reward', type: 'uint256' }],
+    outputs: [
+      { name: 'payout', type: 'uint256' },
+      { name: 'fee', type: 'uint256' },
+    ],
+    stateMutability: 'pure',
   },
   // Write Functions
   {
@@ -107,14 +131,14 @@ export const TINYBOUNTY_ABI = [
   },
   {
     type: 'function',
-    name: 'approveSubmission',
+    name: 'approveWork',
     inputs: [{ name: 'bountyId', type: 'uint256' }],
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
-    name: 'refundBounty',
+    name: 'requestRefund',
     inputs: [{ name: 'bountyId', type: 'uint256' }],
     outputs: [],
     stateMutability: 'nonpayable',
@@ -128,16 +152,6 @@ export const TINYBOUNTY_ABI = [
   },
   {
     type: 'function',
-    name: 'resolveDispute',
-    inputs: [
-      { name: 'bountyId', type: 'uint256' },
-      { name: 'approveWork', type: 'bool' },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
     name: 'cancelBounty',
     inputs: [{ name: 'bountyId', type: 'uint256' }],
     outputs: [],
@@ -145,15 +159,15 @@ export const TINYBOUNTY_ABI = [
   },
   {
     type: 'function',
-    name: 'setPlatformFee',
-    inputs: [{ name: 'newFee', type: 'uint256' }],
+    name: 'withdrawFees',
+    inputs: [],
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
-    name: 'withdrawFees',
-    inputs: [],
+    name: 'updateTreasury',
+    inputs: [{ name: '_newTreasury', type: 'address' }],
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -166,6 +180,7 @@ export const TINYBOUNTY_ABI = [
       { name: 'poster', type: 'address', indexed: true },
       { name: 'reward', type: 'uint256', indexed: false },
       { name: 'deadline', type: 'uint256', indexed: false },
+      { name: 'title', type: 'string', indexed: false },
     ],
   },
   {
@@ -174,6 +189,7 @@ export const TINYBOUNTY_ABI = [
     inputs: [
       { name: 'id', type: 'uint256', indexed: true },
       { name: 'worker', type: 'address', indexed: true },
+      { name: 'claimedAt', type: 'uint256', indexed: false },
     ],
   },
   {
@@ -183,15 +199,18 @@ export const TINYBOUNTY_ABI = [
       { name: 'id', type: 'uint256', indexed: true },
       { name: 'worker', type: 'address', indexed: true },
       { name: 'submissionURI', type: 'string', indexed: false },
+      { name: 'submittedAt', type: 'uint256', indexed: false },
     ],
   },
   {
     type: 'event',
-    name: 'SubmissionApproved',
+    name: 'WorkApproved',
     inputs: [
       { name: 'id', type: 'uint256', indexed: true },
+      { name: 'poster', type: 'address', indexed: true },
       { name: 'worker', type: 'address', indexed: true },
-      { name: 'reward', type: 'uint256', indexed: false },
+      { name: 'payout', type: 'uint256', indexed: false },
+      { name: 'fee', type: 'uint256', indexed: false },
     ],
   },
   {
@@ -199,16 +218,8 @@ export const TINYBOUNTY_ABI = [
     name: 'BountyRefunded',
     inputs: [
       { name: 'id', type: 'uint256', indexed: true },
-      { name: 'poster', type: 'address', indexed: true },
+      { name: 'worker', type: 'address', indexed: true },
       { name: 'amount', type: 'uint256', indexed: false },
-    ],
-  },
-  {
-    type: 'event',
-    name: 'BountyCancelled',
-    inputs: [
-      { name: 'id', type: 'uint256', indexed: true },
-      { name: 'poster', type: 'address', indexed: true },
     ],
   },
   {
